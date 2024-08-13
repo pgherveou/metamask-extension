@@ -1,4 +1,5 @@
 import { providerErrors } from '@metamask/rpc-errors';
+import { isSnapId } from '@metamask/snaps-utils';
 import { MESSAGE_TYPE } from '../../../../../shared/constants/app';
 import {
   validateSwitchEthereumChainParams,
@@ -65,6 +66,7 @@ async function switchEthereumChainHandler(
   }
 
   return switchChain(res, end, chainId, networkClientIdToSwitchTo, {
+    autoApprove: isSnapId(origin),
     setActiveNetwork,
     getCaveat,
     requestPermittedChainsPermissionForOrigin,
