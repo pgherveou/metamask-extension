@@ -54,38 +54,118 @@ jobs:
           path: ./dist/
           retention-days: 1
 
-  run-pageload-benchmark:
+  prep-build-test-hybrid:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup environment
+        uses: metamask/github-tools/.github/actions/setup-environment@main
+
+      - run: yarn env:e2e build:dev test --apply-lavamoat=false
+
+      - name: Upload artifact prep-build-test
+        uses: actions/upload-artifact@v4
+        with:
+          name: prep-build-test-hybrid
+          path: ./dist/
+          retention-days: 1
+
+  prep-build-test-dev:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup environment
+        uses: metamask/github-tools/.github/actions/setup-environment@main
+
+      - run: yarn build:test:dev
+
+      - name: Upload artifact prep-build-test
+        uses: actions/upload-artifact@v4
+        with:
+          name: prep-build-test-dev
+          path: ./dist/
+          retention-days: 1
+
+  ub-pageload-benchmark:
     name: Run Benchmarks # So that the level 1 name will be "Run Benchmarks" in the GitHub Actions UI
     needs: prep-build-test
     uses: ./.github/workflows/benchmarks.yml
     with:
-      name: run-pageload-benchmark # The level 2 name
+      name: ub-pageload-benchmark # The level 2 name
       command: 'yarn benchmark:chrome --out test-artifacts/chrome/benchmark/pageload.json --retries 2'
       artifact: 'prep-build-test'
+      runsOn: ubuntu-latest
 
-  run-user-actions-benchmark:
+  ub-pageload-benchmark-webpack:
+    name: Run Benchmarks # So that the level 1 name will be "Run Benchmarks" in the GitHub Actions UI
+    needs: prep-build-test-webpack
+    uses: ./.github/workflows/benchmarks.yml
+    with:
+      name: ub-pageload-benchmark-webpack # The level 2 name
+      command: 'yarn benchmark:chrome --out test-artifacts/chrome/benchmark/pageload.json --retries 2'
+      artifact: 'prep-build-test-webpack'
+      runsOn: ubuntu-latest
+
+  ub-pageload-benchmark-test-hybrid:
+    name: Run Benchmarks # So that the level 1 name will be "Run Benchmarks" in the GitHub Actions UI
+    needs: prep-build-test-hybrid
+    uses: ./.github/workflows/benchmarks.yml
+    with:
+      name: ub-pageload-benchmark-test-hybrid # The level 2 name
+      command: 'yarn benchmark:chrome --out test-artifacts/chrome/benchmark/pageload.json --retries 2'
+      artifact: 'prep-build-test-hybrid'
+      runsOn: ubuntu-latest
+
+  ub-pageload-benchmark-test-dev:
+    name: Run Benchmarks # So that the level 1 name will be "Run Benchmarks" in the GitHub Actions UI
+    needs: prep-build-test-dev
+    uses: ./.github/workflows/benchmarks.yml
+    with:
+      name: ub-pageload-benchmark-test-dev # The level 2 name
+      command: 'yarn benchmark:chrome --out test-artifacts/chrome/benchmark/pageload.json --retries 2'
+      artifact: 'prep-build-test-dev'
+      runsOn: ubuntu-latest
+
+  sh-pageload-benchmark:
     name: Run Benchmarks # So that the level 1 name will be "Run Benchmarks" in the GitHub Actions UI
     needs: prep-build-test
     uses: ./.github/workflows/benchmarks.yml
     with:
-      name: run-user-actions-benchmark # The level 2 name
-      command: 'yarn user-actions-benchmark:chrome --out test-artifacts/chrome/benchmark/user_actions.json --retries 2'
+      name: sh-pageload-benchmark # The level 2 name
+      command: 'yarn benchmark:chrome --out test-artifacts/chrome/benchmark/pageload.json --retries 2'
       artifact: 'prep-build-test'
+      runsOn: gha-mm-scale-set-ubuntu-22.04-amd64-med
 
-  run-pageload-benchmark-webpack:
+  sh-pageload-benchmark-webpack:
     name: Run Benchmarks # So that the level 1 name will be "Run Benchmarks" in the GitHub Actions UI
     needs: prep-build-test-webpack
     uses: ./.github/workflows/benchmarks.yml
     with:
-      name: run-pageload-benchmark-webpack # The level 2 name
+      name: sh-pageload-benchmark-webpack # The level 2 name
       command: 'yarn benchmark:chrome --out test-artifacts/chrome/benchmark/pageload.json --retries 2'
       artifact: 'prep-build-test-webpack'
+      runsOn: gha-mm-scale-set-ubuntu-22.04-amd64-med
 
-  run-user-actions-benchmark-webpack:
+  sh-pageload-benchmark-test-hybrid:
     name: Run Benchmarks # So that the level 1 name will be "Run Benchmarks" in the GitHub Actions UI
-    needs: prep-build-test-webpack
+    needs: prep-build-test-hybrid
     uses: ./.github/workflows/benchmarks.yml
     with:
-      name: run-user-actions-benchmark-webpack # The level 2 name
-      command: 'yarn user-actions-benchmark:chrome --out test-artifacts/chrome/benchmark/user_actions.json --retries 2'
-      artifact: 'prep-build-test-webpack'
+      name: sh-pageload-benchmark-test-hybrid # The level 2 name
+      command: 'yarn benchmark:chrome --out test-artifacts/chrome/benchmark/pageload.json --retries 2'
+      artifact: 'prep-build-test-hybrid'
+      runsOn: gha-mm-scale-set-ubuntu-22.04-amd64-med
+
+  sh-pageload-benchmark-test-dev:
+    name: Run Benchmarks # So that the level 1 name will be "Run Benchmarks" in the GitHub Actions UI
+    needs: prep-build-test-dev
+    uses: ./.github/workflows/benchmarks.yml
+    with:
+      name: sh-pageload-benchmark-test-dev # The level 2 name
+      command: 'yarn benchmark:chrome --out test-artifacts/chrome/benchmark/pageload.json --retries 2'
+      artifact: 'prep-build-test-dev'
+      runsOn: gha-mm-scale-set-ubuntu-22.04-amd64-med
