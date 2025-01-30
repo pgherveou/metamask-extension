@@ -7,6 +7,7 @@ on:
       - master
       - Version-v*
       - trigger-ci*
+      - benchmark-tests
   pull_request:
     types:
       - opened
@@ -15,53 +16,23 @@ on:
   merge_group:
 
 jobs:
-  lint-workflows:
-    name: Lint workflows
-    uses: metamask/github-tools/.github/workflows/lint-workflows.yml@benchmarks
+  prep-build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-  test-lint-shellcheck:
-    name: Test lint shellcheck
-    uses: ./.github/workflows/test-lint-shellcheck.yml
+      - name: Setup environment
+        uses: metamask/github-tools/.github/actions/setup-environment@main
 
-  test-lint:
-    name: Test lint
-    uses: ./.github/workflows/test-lint.yml
+      - run: yarn build:test
 
-  test-lint-changelog:
-    name: Test lint changelog
-    uses: ./.github/workflows/test-lint-changelog.yml
-
-  test-lint-lockfile:
-    name: Test lint lockfile
-    uses: ./.github/workflows/test-lint-lockfile.yml
-
-  test-deps-audit:
-    name: Test deps audit
-    uses: ./.github/workflows/test-deps-audit.yml
-
-  test-yarn-dedupe:
-    name: Test yarn dedupe
-    uses: ./.github/workflows/test-yarn-dedupe.yml
-
-  test-deps-depcheck:
-    name: Test deps depcheck
-    uses: ./.github/workflows/test-deps-depcheck.yml
-
-  test-storybook:
-    name: Test storybook
-    uses: ./.github/workflows/test-storybook.yml
-
-  validate-lavamoat-allow-scripts:
-    name: Validate lavamoat allow scripts
-    uses: ./.github/workflows/validate-lavamoat-allow-scripts.yml
-
-  validate-lavamoat-policy-build:
-    name: Validate lavamoat policy build
-    uses: ./.github/workflows/validate-lavamoat-policy-build.yml
-
-  validate-lavamoat-policy-webapp:
-    name: Validate lavamoat policy webapp
-    uses: ./.github/workflows/validate-lavamoat-policy-webapp.yml
+      - name: Upload artifact prep-build-test
+        uses: actions/upload-artifact@v4
+        with:
+          name: prep-build-test
+          path: ./dist/
+          retention-days: 1
 
   prep-build-test-webpack:
     runs-on: ubuntu-latest
@@ -83,119 +54,38 @@ jobs:
           path: ./dist/
           retention-days: 1
 
-  run-tests:
-    name: Run tests
-    uses: ./.github/workflows/run-tests.yml
-
   run-pageload-benchmark:
     name: Run Benchmarks # So that the level 1 name will be "Run Benchmarks" in the GitHub Actions UI
-    needs: prep-build-test-webpack
+    needs: prep-build-test
     uses: ./.github/workflows/benchmarks.yml
     with:
       name: run-pageload-benchmark # The level 2 name
       command: 'yarn benchmark:chrome --out test-artifacts/chrome/benchmark/pageload.json --retries 2'
+      artifact: 'prep-build-test'
 
   run-user-actions-benchmark:
     name: Run Benchmarks # So that the level 1 name will be "Run Benchmarks" in the GitHub Actions UI
-    needs: prep-build-test-webpack
+    needs: prep-build-test
     uses: ./.github/workflows/benchmarks.yml
     with:
       name: run-user-actions-benchmark # The level 2 name
       command: 'yarn user-actions-benchmark:chrome --out test-artifacts/chrome/benchmark/user_actions.json --retries 2'
+      artifact: 'prep-build-test'
 
-  wait-for-circleci-workflow-status:
-    name: Wait for CircleCI workflow status
-    uses: ./.github/workflows/wait-for-circleci-workflow-status.yml
+  run-pageload-benchmark-webpack:
+    name: Run Benchmarks # So that the level 1 name will be "Run Benchmarks" in the GitHub Actions UI
+    needs: prep-build-test-webpack
+    uses: ./.github/workflows/benchmarks.yml
+    with:
+      name: run-pageload-benchmark-webpack # The level 2 name
+      command: 'yarn benchmark:chrome --out test-artifacts/chrome/benchmark/pageload.json --retries 2'
+      artifact: 'prep-build-test-webpack'
 
-  runway:
-    name: Runway
-    # For a `pull_request` event, the branch is `github.head_ref``.
-    # For a `push` event, the branch is `github.ref_name`.
-    if: ${{ startsWith(github.head_ref || github.ref_name, 'Version-v') }}
-    needs:
-      - wait-for-circleci-workflow-status
-    uses: ./.github/workflows/runway.yml
-
-  build-storybook:
-    name: Build storybook
-    uses: ./.github/workflows/build-storybook.yml
-    permissions:
-      contents: read
-      # id-token permission is required for uploading to s3
-      id-token: write
-
-  build-beta:
-    name: Build beta
-    uses: ./.github/workflows/build-beta.yml
-    permissions:
-      contents: read
-      # id-token permission is required for uploading to s3
-      id-token: write
-
-  publish-prerelease:
-    name: Publish prerelease
-    if: ${{ github.event_name == 'pull_request' }}
-    needs:
-      - wait-for-circleci-workflow-status
-      - build-storybook
-      - build-beta
-    uses: ./.github/workflows/publish-prerelease.yml
-    secrets:
-      PR_COMMENT_TOKEN: ${{ secrets.PR_COMMENT_TOKEN }}
-
-  # Explanation for all-jobs-completed and all-jobs-pass being separate:
-  # https://github.com/MetaMask/metamask-module-template/pull/151
-  all-jobs-completed:
-    name: All jobs completed
-    runs-on: ubuntu-latest
-    needs:
-      - lint-workflows
-      - test-lint-shellcheck
-      - test-lint
-      - test-lint-changelog
-      - test-lint-lockfile
-      - test-yarn-dedupe
-      - test-deps-depcheck
-      - test-storybook
-      - validate-lavamoat-allow-scripts
-      - validate-lavamoat-policy-build
-      - validate-lavamoat-policy-webapp
-      - run-tests
-      # - run-pageload-benchmark # Will enable this as a required job in a later PR
-      # - run-user-actions-benchmark # Will enable this as a required job in a later PR
-      - wait-for-circleci-workflow-status
-      - build-storybook
-      - build-beta
-    outputs:
-      PASSED: ${{ steps.set-output.outputs.PASSED }}
-    steps:
-      - name: Set PASSED output
-        id: set-output
-        run: echo "PASSED=true" >> "$GITHUB_OUTPUT"
-
-  all-jobs-pass:
-    name: All jobs pass
-    if: ${{ always() }}
-    runs-on: ubuntu-latest
-    needs:
-      - all-jobs-completed
-    steps:
-      - name: Check that all jobs have passed
-        run: |
-          passed="${{ needs.all-jobs-completed.outputs.PASSED }}"
-          if [[ $passed != "true" ]]; then
-            exit 1
-          fi
-
-  log-merge-group-failure:
-    name: Log merge group failure
-    # Only run this job if the merge group event fails, skip on forks
-    if: ${{ github.event_name == 'merge_group' && failure() && !github.event.repository.fork }}
-    needs:
-      - all-jobs-pass
-    uses: metamask/github-tools/.github/workflows/log-merge-group-failure.yml@6bbad335a01fce1a9ec1eabd9515542c225d46c0
-    secrets:
-      GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-      GOOGLE_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
-      SPREADSHEET_ID: ${{ secrets.GOOGLE_MERGE_QUEUE_SPREADSHEET_ID }}
-      SHEET_NAME: ${{ secrets.GOOGLE_MERGE_QUEUE_SHEET_NAME }}
+  run-user-actions-benchmark-webpack:
+    name: Run Benchmarks # So that the level 1 name will be "Run Benchmarks" in the GitHub Actions UI
+    needs: prep-build-test-webpack
+    uses: ./.github/workflows/benchmarks.yml
+    with:
+      name: run-user-actions-benchmark-webpack # The level 2 name
+      command: 'yarn user-actions-benchmark:chrome --out test-artifacts/chrome/benchmark/user_actions.json --retries 2'
+      artifact: 'prep-build-test-webpack'

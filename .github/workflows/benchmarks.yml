@@ -7,6 +7,9 @@ on:
       command:
         required: true
         type: string
+      artifact:
+        required: true
+        type: string
 
 jobs:
   benchmarks:
@@ -21,11 +24,11 @@ jobs:
       - name: Setup environment
         uses: metamask/github-tools/.github/actions/setup-environment@benchmarks
 
-      - name: Download artifact prep-build-test-webpack
+      - name: Download artifact
         uses: actions/download-artifact@v4
         with:
           path: ./dist/
-          pattern: prep-build-test-webpack
+          pattern: ${{ inputs.artifact }}
           merge-multiple: true
 
       # Xvfb initializes a virtual "screen" where the browser opens
