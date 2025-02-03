@@ -6063,11 +6063,11 @@ export async function sendMultichainTransaction(
   });
 }
 
-export async function updateTransactionFocus(
+export async function setTransactionActive(
   transactionId: string,
   isFocused: boolean,
 ): ThunkAction<void, MetaMaskReduxState, unknown, AnyAction> {
-  await submitRequestToBackground('updateTransactionFocus', [
+  await submitRequestToBackground('setTransactionActive', [
     transactionId,
     isFocused,
   ]);
