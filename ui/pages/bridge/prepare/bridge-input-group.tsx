@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { BigNumber } from 'bignumber.js';
-import { getAddress } from 'ethers/lib/utils';
 import {
   Text,
   TextField,
@@ -219,7 +218,7 @@ export const BridgeInputGroup = ({
           }
           onClick={() => {
             if (isAmountReadOnly && token && selectedChainId) {
-              handleCopy(getAddress(token.address));
+              handleCopy(token.address);
             }
           }}
           as={isAmountReadOnly ? 'a' : 'p'}
