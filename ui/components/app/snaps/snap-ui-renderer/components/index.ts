@@ -29,6 +29,7 @@ import { section } from './section';
 import { avatar } from './avatar';
 import { banner } from './banner';
 import { skeleton } from './skeleton';
+import { accountSelector } from './accountSelector';
 
 export const COMPONENT_MAPPING = {
   Box: box,
@@ -62,4 +63,5 @@ export const COMPONENT_MAPPING = {
   Section: section,
   Banner: banner,
   Skeleton: skeleton,
+  AccountSelector: accountSelector,
 };
