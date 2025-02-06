@@ -5078,21 +5078,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@metamask/design-system-react@npm:@metamask-previews/design-system-react@0.0.0-preview.07ad19d":
-  version: 0.0.0-preview.07ad19d
-  resolution: "@metamask-previews/design-system-react@npm:0.0.0-preview.07ad19d"
-  dependencies:
-    "@radix-ui/react-slot": "npm:^1.1.0"
-    tailwind-merge: "npm:^2.0.0"
-  peerDependencies:
-    "@metamask/design-tokens": ^4.1.0
-    react: ^16.0.0
-    react-dom: ^16.0.0
-    tailwindcss: ^3.0.0
-  checksum: 10/85eca3ba27af80018adf0baf6e254a1ba14212ca03f9a7354c51f2c45ce6a217893d9294292ec664840ed2152491c4c0c500f689e0de5ea3580cea2b89a01bf0
-  languageName: node
-  linkType: hard
-
 "@metamask/design-system-tailwind-preset@npm:@metamask-previews/design-system-tailwind-preset@0.0.0-preview.07ad19d":
   version: 0.0.0-preview.07ad19d
   resolution: "@metamask-previews/design-system-tailwind-preset@npm:0.0.0-preview.07ad19d"
@@ -7317,19 +7302,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@radix-ui/react-compose-refs@npm:1.1.1":
-  version: 1.1.1
-  resolution: "@radix-ui/react-compose-refs@npm:1.1.1"
-  peerDependencies:
-    "@types/react": "*"
-    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
-  peerDependenciesMeta:
-    "@types/react":
-      optional: true
-  checksum: 10/1be82f9f7fab96cc10f167a2e4f976e0135a63d473334f664c06f02af13bc5ea1994cb0505f89ed190d756cb65d57506721c030908af07e49b9e3cfd36044f33
-  languageName: node
-  linkType: hard
-
 "@radix-ui/react-context@npm:1.0.1":
   version: 1.0.1
   resolution: "@radix-ui/react-context@npm:1.0.1"
@@ -7607,21 +7579,6 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 10/734866561e991438fbcf22af06e56b272ed6ee8f7b536489ee3bf2f736f8b53bf6bc14ebde94834aa0aceda854d018a0ce20bb171defffbaed1f566006cbb887
-  languageName: node
-  linkType: hard
-
-"@radix-ui/react-slot@npm:^1.1.0":
-  version: 1.1.2
-  resolution: "@radix-ui/react-slot@npm:1.1.2"
-  dependencies:
-    "@radix-ui/react-compose-refs": "npm:1.1.1"
-  peerDependencies:
-    "@types/react": "*"
-    react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
-  peerDependenciesMeta:
-    "@types/react":
-      optional: true
-  checksum: 10/6d5e1fac17b3eb79019a697581133dff23a3f6406f8ecfca476ab4a6a73baa53d66a7c9caeeebcc677363aa3b4132aa9d2168641ba9642658a2e4a297c05e4d3
   languageName: node
   linkType: hard
 
@@ -26728,7 +26685,6 @@ __metadata:
     "@metamask/build-utils": "npm:^3.0.0"
     "@metamask/contract-metadata": "npm:^2.5.0"
     "@metamask/controller-utils": "npm:^11.4.0"
-    "@metamask/design-system-react": "npm:@metamask-previews/design-system-react@0.0.0-preview.07ad19d"
     "@metamask/design-system-tailwind-preset": "npm:@metamask-previews/design-system-tailwind-preset@0.0.0-preview.07ad19d"
     "@metamask/design-tokens": "npm:^5.0.0"
     "@metamask/ens-controller": "npm:^15.0.2"
@@ -35206,13 +35162,6 @@ __metadata:
     slice-ansi: "npm:^2.1.0"
     string-width: "npm:^3.0.0"
   checksum: 10/a00b96779fdeae58fc8b2b10ca7a1dcb81d4a14d1511b2f0202e1ef4ea890ca4d2730cc9b78f399254b9a641458e4897c639079d57dfb7d6726997dd8735a6c3
-  languageName: node
-  linkType: hard
-
-"tailwind-merge@npm:^2.0.0":
-  version: 2.6.0
-  resolution: "tailwind-merge@npm:2.6.0"
-  checksum: 10/a84f49d6f2cfb18ba06dc51b446b69f6b42cedcb9c9fa4e7c5f931b56e739870e513339e02b348b43f44011fa4852f02f72658a3f3e066e5101b09fc28644210
   languageName: node
   linkType: hard
 
