@@ -301,7 +301,6 @@
     "@metamask/browser-passworder": "^4.3.0",
     "@metamask/contract-metadata": "^2.5.0",
     "@metamask/controller-utils": "^11.4.0",
-    "@metamask/design-system-react": "npm:@metamask-previews/design-system-react@0.0.0-preview.07ad19d",
     "@metamask/design-system-tailwind-preset": "npm:@metamask-previews/design-system-tailwind-preset@0.0.0-preview.07ad19d",
     "@metamask/design-tokens": "^5.0.0",
     "@metamask/ens-controller": "^15.0.2",
