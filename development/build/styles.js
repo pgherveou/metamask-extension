@@ -11,7 +11,7 @@ const tailwindcss = require('tailwindcss');
 const pipeline = pify(require('readable-stream').pipeline);
 const sass = require('sass-embedded');
 const gulpSass = require('gulp-sass')(sass);
-const tailwindConfig = require('../../tailwind.config.js');
+const tailwindConfig = require('../../tailwind.config');
 const { TASKS } = require('./constants');
 const { createTask } = require('./task');
 
