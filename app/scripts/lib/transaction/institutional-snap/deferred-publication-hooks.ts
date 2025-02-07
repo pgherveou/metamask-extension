@@ -6,13 +6,11 @@ import {
 import type { HandleSnapRequest } from '@metamask/snaps-controllers';
 import { SnapId } from '@metamask/snaps-sdk';
 import { HandlerType } from '@metamask/snaps-utils';
-import { Messenger, RestrictedMessenger } from '@metamask/base-controller';
-// import InstitutionalWalletSnap from '@metamask/institutional-wallet-snap/dist/preinstalled-snap.json';
+import { RestrictedMessenger } from '@metamask/base-controller';
+import InstitutionalWalletSnap from '@metamask/institutional-wallet-snap/dist/preinstalled-snap.json';
 import { AccountsControllerGetAccountByAddressAction } from '@metamask/accounts-controller';
 
-// FIXME: replace with the snapId from the snap package
-// const snapId = InstitutionalWalletSnap.snapId as SnapId;
-const snapId = 'local:http://localhost:8080' as SnapId;
+const snapId = InstitutionalWalletSnap.snapId as SnapId;
 
 type SnapRPCRequest = Parameters<HandleSnapRequest['handler']>[0];
 
