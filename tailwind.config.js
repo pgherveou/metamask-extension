@@ -9,7 +9,7 @@ module.exports = {
     require('@metamask/design-system-tailwind-preset'),
   ],
   theme: {
-    colors: {}, // This removes all default Tailwind colors
+    colors: {}, // This removes all default Tailwind colors. We want to rely on the colors provided by @metamask/design-system-tailwind-preset
     extend: {},
   },
   plugins: [],
