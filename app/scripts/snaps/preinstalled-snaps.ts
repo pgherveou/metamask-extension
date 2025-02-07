@@ -26,7 +26,7 @@ const PREINSTALLED_SNAPS = Object.freeze<PreinstalledSnap[]>([
   SolanaWalletSnap as unknown as PreinstalledSnap,
   ///: END:ONLY_INCLUDE_IF
   ///: BEGIN:ONLY_INCLUDE_IF(institutional-snap)
-  InstitutionalSnap as unknown as PreinstalledSnap,
+  //  InstitutionalSnap as unknown as PreinstalledSnap,
   ///: END:ONLY_INCLUDE_IF
 ]);
 

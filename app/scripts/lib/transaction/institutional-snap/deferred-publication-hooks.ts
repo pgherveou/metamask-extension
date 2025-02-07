@@ -6,13 +6,13 @@ import {
 import type { HandleSnapRequest } from '@metamask/snaps-controllers';
 import { SnapId } from '@metamask/snaps-sdk';
 import { HandlerType } from '@metamask/snaps-utils';
-import { RestrictedMessenger } from '@metamask/base-controller';
-import { accountRequiresPublicationDeferral } from '../../../../../shared/modules/selectors';
+import { Messenger, RestrictedMessenger } from '@metamask/base-controller';
+// import InstitutionalWalletSnap from '@metamask/institutional-wallet-snap/dist/preinstalled-snap.json';
+import { AccountsControllerGetAccountByAddressAction } from '@metamask/accounts-controller';
 
-import InstitutionalWalletSnap from '../../../snaps/preinstalled-snap.json';
-import { ControllerFlatState } from '../../../controller-init/controller-list';
-
-const snapId = InstitutionalWalletSnap.snapId as SnapId;
+// FIXME: replace with the snapId from the snap package
+// const snapId = InstitutionalWalletSnap.snapId as SnapId;
+const snapId = 'local:http://localhost:8080' as SnapId;
 
 type SnapRPCRequest = Parameters<HandleSnapRequest['handler']>[0];
 
@@ -79,37 +79,60 @@ export type InstitutionalSnapRequestSearchParameters = {
   chainId: string;
 };
 
-type AllowedActions = HandleSnapRequest;
+type AllowedActions =
+  | HandleSnapRequest
+  | AccountsControllerGetAccountByAddressAction;
 
-export type InstitutionalSnapMessenger = RestrictedMessenger<
-  'SnapsNameProvider',
+export type DeferredPublicationHookMessenger = RestrictedMessenger<
+  'DeferredPublicationHookMessenger',
   AllowedActions,
   never,
   AllowedActions['type'],
   never
 >;
 
+type DeferrableTransactionAccount = {
+  options: {
+    custodian: {
+      deferPublication: boolean;
+    };
+  };
+};
+
+async function handleSnapRequest(
+  controllerMessenger: DeferredPublicationHookMessenger,
+  args: SnapRPCRequest,
+) {
+  const response = await controllerMessenger.call(
+    'SnapController:handleRequest',
+    args,
+  );
+  return response as InstitutionalSnapResponse;
+}
+
+async function shouldDeferPublication(
+  controllerMessenger: DeferredPublicationHookMessenger,
+  transactionMeta: TransactionMeta,
+) {
+  const account = controllerMessenger.call(
+    'AccountsController:getAccountByAddress',
+    transactionMeta.txParams.from as string,
+  ) as unknown as DeferrableTransactionAccount;
+
+  return account?.options.custodian?.deferPublication;
+}
+
 export const deferPublicationHookFactory = (
   getTransactionController: () => TransactionController,
-  controllerMessenger: InstitutionalSnapMessenger,
-  getMetaMaskState: () => ControllerFlatState,
+  controllerMessenger: DeferredPublicationHookMessenger,
 ) => {
-  async function handleSnapRequest(args: SnapRPCRequest) {
-    const response = await controllerMessenger.call(
-      'SnapController:handleRequest',
-      args,
-    );
-    return response;
-  }
-
-  return async function (transactionMeta: TransactionMeta) {
-    const state = getMetaMaskState();
-    const shouldDeferPublication = accountRequiresPublicationDeferral(
-      state,
-      transactionMeta.txParams.from,
+  return async function (transactionMeta: TransactionMeta): Promise<boolean> {
+    const shouldDefer = await shouldDeferPublication(
+      controllerMessenger,
+      transactionMeta,
     );
 
-    if (shouldDeferPublication) {
+    if (shouldDefer) {
       // Some transaction parameters are mutated by the custodian, for example
       // the gas and nonce parameters are set to the custodian's preference.
       // The snap is aware of these mutated parameters, so we need to fetch them
@@ -137,6 +160,7 @@ export const deferPublicationHookFactory = (
       };
 
       const snapResponse = await handleSnapRequest(
+        controllerMessenger,
         snapGetMutableTransactionParamsPayload,
       );
 
@@ -162,16 +186,15 @@ export const deferPublicationHookFactory = (
 };
 
 export const beforeCheckPendingTransactionHookFactory = (
-  getMetaMaskState: () => ControllerFlatState,
+  controllerMessenger: DeferredPublicationHookMessenger,
 ) => {
-  return function (transactionMeta: TransactionMeta) {
-    const state = getMetaMaskState();
-    const shouldDeferPublication = accountRequiresPublicationDeferral(
-      state,
-      transactionMeta.txParams.from,
+  return async function (transactionMeta: TransactionMeta) {
+    const shouldDefer = await shouldDeferPublication(
+      controllerMessenger,
+      transactionMeta,
     );
 
-    if (shouldDeferPublication) {
+    if (shouldDefer) {
       return false;
     }
     return true;
