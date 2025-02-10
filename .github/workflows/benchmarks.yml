@@ -32,6 +32,11 @@ jobs:
       - name: Configure Xvfb
         run: Xvfb -ac :99 -screen 0 1280x1024x16 &
 
+      - name: Debugging with tmate
+        uses: ./.github/actions/actions-tmate
+        with:
+          limit-access-to-actor: true
+
       - name: Run the benchmark
         run: ${{ inputs.command }}
 
