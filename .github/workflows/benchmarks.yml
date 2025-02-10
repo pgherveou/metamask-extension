@@ -14,7 +14,8 @@ jobs:
     runs-on: gha-mm-scale-set-ubuntu-22.04-amd64-med
     container:
       # image: cimg/node:22.13-browsers
-      image: browserless/chrome
+      # image: browserless/chrome
+      image: ghcr.io/browserless/chromium
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
