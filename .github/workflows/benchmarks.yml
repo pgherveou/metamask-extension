@@ -13,9 +13,9 @@ jobs:
     name: ${{ inputs.name }}
     runs-on: gha-mm-scale-set-ubuntu-22.04-amd64-med
     container:
-      # image: cimg/node:22.13-browsers
+      image: cimg/node:22.13-browsers
       # image: browserless/chrome
-      image: ghcr.io/browserless/chromium
+      # image: ghcr.io/browserless/chromium
       options: --user root
     steps:
       - name: Checkout repository
