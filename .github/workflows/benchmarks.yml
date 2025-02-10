@@ -20,9 +20,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          clean: false
-          set-safe-directory: false
 
       - name: Setup environment
         uses: metamask/github-tools/.github/actions/setup-environment@benchmarks
