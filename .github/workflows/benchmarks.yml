@@ -13,7 +13,8 @@ jobs:
     name: ${{ inputs.name }}
     runs-on: gha-mm-scale-set-ubuntu-22.04-amd64-med
     container:
-      image: cimg/node:22.13-browsers
+      # image: cimg/node:22.13-browsers
+      image: browserless/chrome
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -27,6 +28,8 @@ jobs:
           path: ./dist/
           pattern: prep-build-test-webpack
           merge-multiple: true
+
+      - run: echo "set -g mouse on" >> ~/.tmux.conf
 
       - name: Debugging with tmate
         uses: ./.github/actions/actions-tmate
