@@ -17,7 +17,7 @@ jobs:
       image: cimg/node:22.13-browsers
       # image: browserless/chrome
       # image: ghcr.io/browserless/chromium
-      options: --user root --security-opt seccomp=chrome.json
+      options: --user root --security-opt seccomp=https://raw.githubusercontent.com/jessfraz/dotfiles/refs/heads/master/etc/docker/seccomp/chrome.json
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
