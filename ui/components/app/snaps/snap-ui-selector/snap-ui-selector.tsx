@@ -43,6 +43,7 @@ export type SnapUISelectorProps = {
   disabled?: boolean;
   findSelectedOptionIndex?: (selectedOptionValue: State | undefined) => number;
   showSelectedOption?: boolean;
+  onSelect?: (value: State) => void;
 };
 
 type SelectorItemProps = {
@@ -120,6 +121,7 @@ export const SnapUISelector: React.FunctionComponent<SnapUISelectorProps> = ({
   error,
   disabled,
   findSelectedOptionIndex,
+  onSelect,
 }) => {
   const { handleInputChange, getValue } = useSnapInterfaceContext();
 
@@ -143,6 +145,7 @@ export const SnapUISelector: React.FunctionComponent<SnapUISelectorProps> = ({
 
   const handleSelect = (value: State) => {
     setSelectedOption(value);
+    onSelect?.(value);
     handleInputChange(name, value, form);
     handleModalClose();
   };
