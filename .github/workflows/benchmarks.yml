@@ -11,7 +11,8 @@ on:
 jobs:
   benchmarks:
     name: ${{ inputs.name }}
-    runs-on: gha-mm-scale-set-ubuntu-22.04-amd64-med
+    # runs-on: gha-mm-scale-set-ubuntu-22.04-amd64-med
+    runs-on: ubuntu-latest
     container:
       image: cimg/node:22.13-browsers
       # image: browserless/chrome
