@@ -1403,8 +1403,8 @@ export default class MetamaskController extends EventEmitter {
     const multichainRouterMessenger = this.controllerMessenger.getRestricted({
       name: 'MultichainRouter',
       allowedActions: [
-        `${this.snapController.name}:getAll`,
-        `${this.snapController.name}:handleRequest`,
+        `SnapController:getAll`,
+        `SnapController:handleRequest`,
         `${this.permissionController.name}:getPermissions`,
         `AccountsController:listMultichainAccounts`,
       ],
@@ -1417,7 +1417,7 @@ export default class MetamaskController extends EventEmitter {
       withSnapKeyring: this.keyringController.withKeyring.bind(
         this.keyringController,
         {
-          type: 'snap',
+          type: 'Snap Keyring',
         },
       ),
     });
