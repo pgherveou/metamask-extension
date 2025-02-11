@@ -447,6 +447,14 @@
     },
     "@lavamoat/lavadome-react": {
       "globals": {
+        "Document.prototype": true,
+        "DocumentFragment.prototype": true,
+        "Element.prototype": true,
+        "Event.prototype": true,
+        "EventTarget.prototype": true,
+        "NavigateEvent.prototype": true,
+        "NavigationDestination.prototype": true,
+        "Node.prototype": true,
         "console.warn": true,
         "document": true,
         "navigation": true
@@ -5300,6 +5308,7 @@
       "globals": {
         "Element.prototype": true,
         "__REDUX_DEVTOOLS_EXTENSION_COMPOSE__": true,
+        "addEventListener": true,
         "cancelAnimationFrame": true,
         "clearTimeout": true,
         "console": true,
@@ -5307,6 +5316,7 @@
         "getComputedStyle": true,
         "pageXOffset": true,
         "pageYOffset": true,
+        "removeEventListener": true,
         "requestAnimationFrame": true,
         "scrollBy": true,
         "setTimeout": true
