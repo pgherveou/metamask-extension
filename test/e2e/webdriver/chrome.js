@@ -61,6 +61,7 @@ class ChromeDriver {
       args.push('--disable-gpu');
     }
 
+    console.log('sele', isHeadless('SELENIUM'));
     if (isHeadless('SELENIUM')) {
       // TODO: Remove notice and consider non-experimental when results are consistent
       console.warn(
