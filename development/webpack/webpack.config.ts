@@ -191,7 +191,7 @@ if (args.lavamoat) {
       __unsafeAllowContextModules: true,
       scuttleGlobalThis: {
         enabled: true,
-        scuttlerName: 'SCUTTLER',
+        // scuttlerName: 'SCUTTLER', // TODO(weizman) SUPPORT SNOW AND SCUTTLER
         exceptions: [
           // globals used by different mm deps outside of lm compartment
           'Proxy',
@@ -242,6 +242,8 @@ if (args.lavamoat) {
           'stateHooks',
           'sentryHooks',
           'sentry',
+          // webpack
+          'webpackChunk',
         ],
       }
     }),
