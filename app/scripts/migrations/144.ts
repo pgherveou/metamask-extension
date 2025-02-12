@@ -258,7 +258,7 @@ function getCaveat(
 ): Caip25CaveatValue {
   const existingCaveat = subject.permissions[
     Caip25EndowmentPermissionName
-    ]?.caveats?.find((caveat) => caveat.type === Caip25CaveatType);
+  ]?.caveats?.find((caveat) => caveat.type === Caip25CaveatType);
 
   if (!existingCaveat) {
     return {
