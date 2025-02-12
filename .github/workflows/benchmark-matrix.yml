@@ -11,8 +11,8 @@ env:
 jobs:
   benchmarks:
     runs-on: ubuntu-latest
-    container:
-      image: cimg/node:22.13-browsers
+    # container:
+    #   image: cimg/node:22.13-browsers
     strategy:
       matrix:
         buildType: [browserify, webpack]
