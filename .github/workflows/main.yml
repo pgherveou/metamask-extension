@@ -120,7 +120,7 @@ jobs:
 
   run-benchmark-matrix:
     uses: ./.github/workflows/benchmark-matrix.yml
-    needs: [prep-build-test-browserify, prep-build-test-webpack]
+    needs: [prep-build-test-webpack]
 
   wait-for-circleci-workflow-status:
     name: Wait for CircleCI workflow status
