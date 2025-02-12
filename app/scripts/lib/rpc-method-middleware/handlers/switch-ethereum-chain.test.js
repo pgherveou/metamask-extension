@@ -165,6 +165,7 @@ describe('switchEthereumChainHandler', () => {
       '0xdeadbeef',
       'mainnet',
       {
+        autoApprove: false,
         setActiveNetwork: mocks.setActiveNetwork,
         getCaveat: mocks.getCaveat,
         requestPermittedChainsPermissionForOrigin:
