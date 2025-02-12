@@ -257,7 +257,16 @@ workflows:
               only: main
           requires:
             - prep-build-ts-migration-dashboard
-
+      - send-ci-break-notification:
+          filters:
+            branches:
+              only: dm-add-ci-break-notification
+          context: mm-extension-ci-bot
+          steps:
+            - slack/notify:
+              event: fail
+              mentions: '@metamask-extension-platform'
+              template: basic_fail_1
   rerun-from-failed:
     when:
       matches:
