@@ -188,10 +188,12 @@ const Footer = () => {
   });
 
   const isSignature = isSignatureTransactionType(currentConfirmation);
+  const [isUpgradeAcknowledged, setIsUpgradeAcknowledged] = useState(false);
 
   const isConfirmDisabled =
     (!isScrollToBottomCompleted && !isSignature) ||
-    hardwareWalletRequiresConnection;
+    hardwareWalletRequiresConnection ||
+    (isUpgrade && !isUpgradeAcknowledged);
 
   const rejectApproval = useCallback(
     ({ location }: { location?: MetaMetricsEventLocation } = {}) => {
@@ -281,8 +283,9 @@ const Footer = () => {
       />
       {isUpgrade && (
         <Checkbox
-          label="If you confirm this request, your account will be updated to a smart account."
-          isChecked={false}
+          label={t('confirmUpgradeAcknowledge')}
+          isChecked={isUpgradeAcknowledged}
+          onChange={() => setIsUpgradeAcknowledged(!isUpgradeAcknowledged)}
           alignItems={AlignItems.flexStart}
         />
       )}

@@ -25,6 +25,7 @@ import { useDispatch } from 'react-redux';
 import { providerErrors, serializeError } from '@metamask/rpc-errors';
 import { rejectPendingApproval } from '../../../../../../store/actions';
 import { useConfirmContext } from '../../../../context/confirm';
+import ZENDESK_URLS from '../../../../../../helpers/constants/zendesk-url';
 
 export function UpgradeCancelModal({
   isOpen,
@@ -59,11 +60,21 @@ export function UpgradeCancelModal({
     >
       <ModalOverlay />
       <ModalContent size={ModalContentSize.Md}>
-        <ModalHeader onClose={onClose}>Cancel transaction</ModalHeader>
+        <ModalHeader onClose={onClose}>
+          {t('confirmUpgradeCancelModalTitle')}
+        </ModalHeader>
         <ModalBody>
-          <Text>
-            If you wish not to update your account, you’ll have to generate this
-            request again on the dapp. Learn more
+          <Text style={{ whiteSpace: 'pre-wrap' }}>
+            {t('confirmUpgradeCancelModalDescription', [
+              <a
+                key="learnMoreLink"
+                target="_blank"
+                rel="noopener noreferrer"
+                href={ZENDESK_URLS.ACCOUNT_UPGRADE}
+              >
+                {t('learnMoreUpperCase')}
+              </a>,
+            ])}
           </Text>
         </ModalBody>
         <ModalFooter>
@@ -77,9 +88,11 @@ export function UpgradeCancelModal({
               onClick={handleRejectUpgrade}
               variant={ButtonVariant.Secondary}
             >
-              Cancel upgrading the account
+              {t('confirmUpgradeCancelModalButtonCancelUpgrade')}
             </Button>
-            <Button onClick={onReject}>Cancel this request</Button>
+            <Button onClick={onReject}>
+              {t('confirmUpgradeCancelModalButtonCancelTransaction')}
+            </Button>
           </Box>
         </ModalFooter>
       </ModalContent>
