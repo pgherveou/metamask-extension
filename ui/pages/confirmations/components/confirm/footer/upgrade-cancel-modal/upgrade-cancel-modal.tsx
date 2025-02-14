@@ -23,7 +23,10 @@ import {
 import { useI18nContext } from '../../../../../../hooks/useI18nContext';
 import { useDispatch } from 'react-redux';
 import { providerErrors, serializeError } from '@metamask/rpc-errors';
-import { rejectPendingApproval } from '../../../../../../store/actions';
+import {
+  disableAccountUpgradeForChain,
+  rejectPendingApproval,
+} from '../../../../../../store/actions';
 import { useConfirmContext } from '../../../../context/confirm';
 import ZENDESK_URLS from '../../../../../../helpers/constants/zendesk-url';
 
@@ -40,16 +43,19 @@ export function UpgradeCancelModal({
   const dispatch = useDispatch();
   const { currentConfirmation } = useConfirmContext();
   const { id: confirmationId } = currentConfirmation;
+  const chainId = currentConfirmation.chainId as string;
 
-  const handleRejectUpgrade = useCallback(() => {
+  const handleRejectUpgrade = useCallback(async () => {
     const error = providerErrors.unsupportedMethod(
       'User rejected account upgrade',
     );
 
     const serializedError = serializeError(error);
 
+    await disableAccountUpgradeForChain(chainId);
+
     dispatch(rejectPendingApproval(confirmationId, serializedError));
-  }, [dispatch, confirmationId]);
+  }, [dispatch, confirmationId, chainId]);
 
   return (
     <Modal

@@ -3,6 +3,7 @@ import { NetworkController } from '@metamask/network-controller';
 import { rpcErrors } from '@metamask/rpc-errors';
 import { TransactionController } from '@metamask/transaction-controller';
 import { Hex, JsonRpcRequest } from '@metamask/utils';
+import { PreferencesController } from '../../controllers/preferences-controller';
 
 export async function processSendCalls(
   transactionController: TransactionController,
@@ -46,20 +47,28 @@ export function getTransactionReceiptsByBatchId(
 }
 
 export async function getCapabilities(
-  controller: TransactionController,
+  transactionController: TransactionController,
+  preferencesController: PreferencesController,
   address: Hex,
 ) {
-  const atomicBatchChains = await controller.isAtomicBatchSupported(address);
-
-  return atomicBatchChains.reduce(
-    (acc, chainId) => ({
-      ...acc,
-      [chainId]: {
-        atomicBatch: {
-          supported: true,
-        },
-      },
-    }),
-    {},
+  const atomicBatchChains = await transactionController.isAtomicBatchSupported(
+    address,
   );
+
+  const disabledChains =
+    preferencesController.getDisabledAccountUpgradeChains();
+
+  return atomicBatchChains
+    .filter((chainId) => !disabledChains.includes(chainId))
+    .reduce(
+      (acc, chainId) => ({
+        ...acc,
+        [chainId]: {
+          atomicBatch: {
+            supported: true,
+          },
+        },
+      }),
+      {},
+    );
 }
